@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { generateApp } from "./generator";
+import { generateApp } from "./index";
 import type { InsertGeneratedApp } from "@shared/schema";
 import { z } from "zod";
 
