@@ -3,6 +3,8 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
+const rootDir = path.resolve(import.meta.dirname);
+
 export default defineConfig({
   plugins: [
     react(),
@@ -21,13 +23,12 @@ export default defineConfig({
   ],
   resolve: {
     alias: [
-      { find: /^@\/components\/ui\//, replacement: `${path.resolve(import.meta.dirname)}/` },
-      { find: /^@\/components\//, replacement: `${path.resolve(import.meta.dirname)}/` },
-      { find: /^@\/lib\//, replacement: `${path.resolve(import.meta.dirname)}/` },
-      { find: /^@\/hooks\//, replacement: `${path.resolve(import.meta.dirname)}/` },
-      { find: /^@\/pages\//, replacement: `${path.resolve(import.meta.dirname)}/` },
-      { find: /^@shared\//, replacement: `${path.resolve(import.meta.dirname)}/` },
-      { find: /^@\//, replacement: `${path.resolve(import.meta.dirname)}/` },
+      { find: /^@\/components\/ui\/(.+)$/, replacement: `${rootDir}/$1` },
+      { find: /^@\/components\/(.+)$/, replacement: `${rootDir}/$1` },
+      { find: /^@\/(?:lib|hooks|pages)\/(.+)$/, replacement: `${rootDir}/$1` },
+      { find: /^@shared\/(.+)$/, replacement: `${rootDir}/$1` },
+      // Keep this catch-all last so more specific aliases take precedence.
+      { find: /^@\/(.*)$/, replacement: `${rootDir}/$1` },
     ],
   },
   root: path.resolve(import.meta.dirname),

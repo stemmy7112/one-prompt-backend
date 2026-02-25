@@ -1,4 +1,4 @@
-import { analyzePrompt, generateFrontendCode, generateBackendCode, generateSchemaCode } from "./openai";
+import { analyzePrompt, generateFrontendCode, generateBackendCode, generateSchemaCode } from "./ai";
 import { 
   getBaseEnvVars, 
   getDeploymentInstructions, 

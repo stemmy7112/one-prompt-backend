@@ -16,9 +16,6 @@
     "baseUrl": ".",
     "types": ["node", "vite/client"],
     "paths": {
-      "vite": ["./node_modules/vite"],
-      "input-otp": ["./node_modules/input-otp"],
-      "openai": ["./node_modules/openai"],
       "@/*": ["./*"],
       "@/components/*": ["./*"],
       "@/components/ui/*": ["./*.tsx", "./*.ts"],

@@ -39,7 +39,8 @@ async function buildAll() {
   console.log("building client...");
   await viteBuild();
 
-  if (existsSync("server/index.ts")) {
+  const serverEntry = "server/index.ts";
+  if (existsSync(serverEntry)) {
     console.log("building server...");
     const pkg = JSON.parse(await readFile("package.json", "utf-8"));
     const allDeps = [
@@ -49,7 +50,7 @@ async function buildAll() {
     const externals = allDeps.filter((dep) => !allowlist.includes(dep));
 
     await esbuild({
-      entryPoints: ["server/index.ts"],
+      entryPoints: [serverEntry],
       platform: "node",
       bundle: true,
       format: "cjs",
