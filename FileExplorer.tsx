@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ChevronRight, ChevronDown, FileCode, Folder, FolderOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { GeneratedFile } from "@shared/schema";
@@ -19,6 +19,7 @@ interface FileExplorerProps {
 
 function buildFileTree(files: GeneratedFile[]): FileNode[] {
   const root: FileNode[] = [];
+  const nodeMap = new Map<string, FileNode>();
   
   for (const file of files) {
     const parts = file.path.split("/");
@@ -28,9 +29,9 @@ function buildFileTree(files: GeneratedFile[]): FileNode[] {
       const part = parts[i];
       const isLast = i === parts.length - 1;
       const path = parts.slice(0, i + 1).join("/");
-      
-      let existing = current.find((n) => n.name === part);
-      
+
+      let existing = nodeMap.get(path);
+
       if (!existing) {
         existing = {
           name: part,
@@ -40,6 +41,9 @@ function buildFileTree(files: GeneratedFile[]): FileNode[] {
           file: isLast ? file : undefined,
         };
         current.push(existing);
+        nodeMap.set(path, existing);
+      } else if (isLast && !existing.file) {
+        existing.file = file;
       }
       
       if (!isLast && existing.children) {
@@ -49,14 +53,15 @@ function buildFileTree(files: GeneratedFile[]): FileNode[] {
   }
   
   const sortNodes = (nodes: FileNode[]): FileNode[] => {
-    return nodes.sort((a, b) => {
+    nodes.sort((a, b) => {
       if (a.isFolder && !b.isFolder) return -1;
       if (!a.isFolder && b.isFolder) return 1;
       return a.name.localeCompare(b.name);
-    }).map((node) => ({
-      ...node,
-      children: node.children ? sortNodes(node.children) : undefined,
-    }));
+    });
+    nodes.forEach((node) => {
+      if (node.children) sortNodes(node.children);
+    });
+    return nodes;
   };
   
   return sortNodes(root);
@@ -183,7 +188,7 @@ export function FileExplorer({ files, selectedFile, onSelectFile }: FileExplorer
     });
   };
   
-  const tree = buildFileTree(files);
+  const tree = useMemo(() => buildFileTree(files), [files]);
   
   return (
     <div className="py-2 overflow-y-auto">

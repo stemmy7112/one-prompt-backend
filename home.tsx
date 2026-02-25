@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Sparkles, Send, Wand2, Zap, Code, CreditCard, Layers, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -33,6 +33,11 @@ export default function Home() {
   const { data: history = [], isLoading: historyLoading } = useQuery<GeneratedApp[]>({
     queryKey: ["/api/apps"],
   });
+  const historyById = useMemo(() => {
+    const map = new Map<number, GeneratedApp>();
+    history.forEach((item) => map.set(item.id, item));
+    return map;
+  }, [history]);
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
@@ -50,7 +55,7 @@ export default function Home() {
 
   const handleSelectHistory = async (id: number) => {
     setSelectedHistoryId(id);
-    const app = history.find((a) => a.id === id);
+    const app = historyById.get(id);
     if (app) {
       setGeneratedApp(app);
     }

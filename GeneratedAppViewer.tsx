@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileExplorer } from "./FileExplorer";
 import { CodeBlock } from "./CodeBlock";
@@ -28,7 +28,13 @@ export function GeneratedAppViewer({
   );
   const [activeTab, setActiveTab] = useState("files");
 
-  const selectedFileData = files.find((f) => f.path === selectedFile);
+  const fileMap = useMemo(() => {
+    const map = new Map<string, GeneratedFile>();
+    files.forEach((file) => map.set(file.path, file));
+    return map;
+  }, [files]);
+
+  const selectedFileData = selectedFile ? fileMap.get(selectedFile) : undefined;
 
   const downloadProject = () => {
     const content = JSON.stringify({ files, envVars, deploymentInstructions }, null, 2);
