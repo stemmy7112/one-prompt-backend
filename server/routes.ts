@@ -151,5 +151,10 @@ export async function registerRoutes(
     }
   });
 
+  // Health check
+  app.get("/api/health", (_req, res) => {
+    res.json({ status: "ok" });
+  });
+
   return httpServer;
 }
