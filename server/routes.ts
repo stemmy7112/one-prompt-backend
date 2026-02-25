@@ -1,5 +1,5 @@
 import type { Express } from "express";
-import { createServer, type Server } from "http";
+import type { Server } from "http";
 import { storage } from "./storage";
 import { generateApp } from "./generator";
 import type { InsertGeneratedApp } from "@shared/schema";
@@ -32,6 +32,9 @@ export async function registerRoutes(
       res.setHeader("Cache-Control", "no-cache");
       res.setHeader("Connection", "keep-alive");
 
+      const abortController = new AbortController();
+      req.on("close", () => abortController.abort());
+
       let appId: number | null = null;
       let appData: Partial<InsertGeneratedApp> = {
         prompt,
@@ -43,6 +46,7 @@ export async function registerRoutes(
       };
 
       for await (const event of generateApp(prompt)) {
+        if (abortController.signal.aborted || res.writableEnded) break;
         switch (event.type) {
           case "status":
             res.write(`data: ${JSON.stringify({ 
