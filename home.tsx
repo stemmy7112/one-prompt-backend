@@ -4,12 +4,12 @@ import { Sparkles, Send, Wand2, Zap, Code, CreditCard, Layers, ArrowRight } from
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "./use-toast";
 import { GeneratedAppViewer } from "@/components/GeneratedAppViewer";
 import { GenerationProgress } from "@/components/GenerationProgress";
 import { HistoryList } from "@/components/HistoryList";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { apiRequest } from "@/lib/queryClient";
+import { apiRequest } from "./queryClient";
 import type { GeneratedApp, GeneratedFile, EnvVar } from "@shared/schema";
 
 const EXAMPLE_PROMPTS = [

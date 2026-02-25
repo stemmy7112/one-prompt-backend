@@ -20,13 +20,15 @@ export default defineConfig({
       : []),
   ],
   resolve: {
-    alias: {
-      "@": path.resolve(import.meta.dirname),
-      "@shared": path.resolve(import.meta.dirname),
-      "@/components": path.resolve(import.meta.dirname),
-      "@/components/ui": path.resolve(import.meta.dirname),
-      "@/lib": path.resolve(import.meta.dirname),
-    },
+    alias: [
+      { find: /^@\/components\/ui\//, replacement: `${path.resolve(import.meta.dirname)}/` },
+      { find: /^@\/components\//, replacement: `${path.resolve(import.meta.dirname)}/` },
+      { find: /^@\/lib\//, replacement: `${path.resolve(import.meta.dirname)}/` },
+      { find: /^@\/hooks\//, replacement: `${path.resolve(import.meta.dirname)}/` },
+      { find: /^@\/pages\//, replacement: `${path.resolve(import.meta.dirname)}/` },
+      { find: /^@shared\//, replacement: `${path.resolve(import.meta.dirname)}/` },
+      { find: /^@\//, replacement: `${path.resolve(import.meta.dirname)}/` },
+    ],
   },
   root: path.resolve(import.meta.dirname),
   build: {
