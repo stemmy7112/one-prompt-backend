@@ -18,6 +18,7 @@ const EXAMPLE_PROMPTS = [
   "A mood tracking journal with AI insights and weekly emotional reports",
   "A micro-SaaS for freelancers to track time, invoices, and client projects",
 ];
+const EMPTY_HISTORY: GeneratedApp[] = [];
 
 export default function Home() {
   const [prompt, setPrompt] = useState("");
@@ -30,9 +31,11 @@ export default function Home() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: history = [], isLoading: historyLoading } = useQuery<GeneratedApp[]>({
+  const { data: historyData, isLoading: historyLoading } = useQuery<GeneratedApp[]>({
     queryKey: ["/api/apps"],
+    initialData: EMPTY_HISTORY,
   });
+  const history = historyData ?? EMPTY_HISTORY;
   const historyById = useMemo(() => {
     const map = new Map<number, GeneratedApp>();
     history.forEach((item) => map.set(item.id, item));
