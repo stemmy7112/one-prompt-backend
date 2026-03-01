@@ -66,7 +66,11 @@ export interface GenerateAppResponse {
   deploymentInstructions: string;
 }
 
-export interface GenerationStreamEvent {
-  type: "status" | "file" | "envVar" | "complete" | "error";
-  data: any;
-}
+export type GenerationStreamEvent =
+  | { type: "status"; step: string; completed?: string }
+  | { type: "appInfo"; appName: string; description?: string; appId?: number }
+  | { type: "files"; files: GeneratedFile[] }
+  | { type: "envVars"; envVars: EnvVar[] }
+  | { type: "deploymentInstructions"; instructions: string }
+  | { type: "complete"; app: GeneratedApp | null }
+  | { type: "error"; message: string };
