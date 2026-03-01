@@ -283,7 +283,7 @@ ${fields}
 }
 
 function getDefaultHomePage(app: GeneratedAppStructure): string {
-  return `import { useState } from "react";
+  return `import { useEffect, useState } from "react";
 
 export default function Home() {
   const [input, setInput] = useState("");
@@ -302,7 +302,7 @@ export default function Home() {
     }
   };
 
-  useState(() => { checkAccess(); }, []);
+  useEffect(() => { checkAccess(); }, []);
 
   const handleSubmit = async () => {
     if (!input.trim()) return;

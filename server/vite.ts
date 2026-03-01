@@ -34,15 +34,14 @@ export async function setupVite(server: Server, app: Express) {
   app.use("/{*path}", async (req, res, next) => {
     const url = req.originalUrl;
 
-    try {
-      const clientTemplate = path.resolve(
-        import.meta.dirname,
-        "..",
-        "client",
-        "index.html",
-      );
+    if (url.startsWith("/api")) {
+      return next();
+    }
 
-      // always reload the index.html file from disk incase it changes
+    try {
+      const clientTemplate = path.resolve(process.cwd(), "client", "index.html");
+
+      // always reload the index.html file from disk in case it changes
       let template = await fs.promises.readFile(clientTemplate, "utf-8");
       template = template.replace(
         `src="/src/main.tsx"`,
